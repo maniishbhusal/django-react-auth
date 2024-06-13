@@ -1,7 +1,15 @@
-import { NavLink } from "react-router-dom";
-import { Box, Button, TextField } from "@mui/material";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Alert, Box, Button, TextField } from "@mui/material";
+import { useState } from "react";
 
 const UserLoginPage = () => {
+  const navigate = useNavigate();
+  const [error, setError] = useState({
+    status: false,
+    msg: "",
+    type: "",
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -11,13 +19,14 @@ const UserLoginPage = () => {
     };
 
     // console.log(actualData);
-    // validation 
+    // validation
     if (actualData.email && actualData.password) {
-      alert("Login Successful");
+      setError({ status: true, msg: "Login Successful", type: "success" });
       document.getElementById("login-form").reset();
+      navigate("/");
     } else {
-      alert("Please fill all the fields");
-    } 
+      setError({ status: true, msg: "All Fields are Required", type: "error" });
+    }
   };
 
   return (
@@ -55,7 +64,8 @@ const UserLoginPage = () => {
             Login
           </Button>
         </Box>
-        <NavLink to="/">Forgot Password?</NavLink>
+        <NavLink to="/sendpasswordresetemail">Forgot Password?</NavLink>
+        {error.status ? <Alert severity={error.type}>{error.msg}</Alert> : ""}
       </Box>
     </>
   );

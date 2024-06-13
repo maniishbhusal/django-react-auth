@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import { Box, Card, Grid, Tab, Tabs } from "@mui/material";
 import shopping_img from "../../../images/shopping.png";
 import UserLoginPage from "./UserLoginPage";
+import UserRegistrationPage from "./UserRegistrationPage";
 
 /**
  * The TabPanel component conditionally renders its children based on the value and index props.
@@ -65,7 +66,7 @@ const LoginReg = () => {
                 <UserLoginPage />
               </TabPanel>
               <TabPanel value={value} index={1}>
-                Registration
+                <UserRegistrationPage />
               </TabPanel>
             </Box>
           </Card>
