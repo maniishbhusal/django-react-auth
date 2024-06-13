@@ -23,7 +23,7 @@ const UserLoginPage = () => {
     if (actualData.email && actualData.password) {
       setError({ status: true, msg: "Login Successful", type: "success" });
       document.getElementById("login-form").reset();
-      navigate("/");
+      navigate("/dashboard");
     } else {
       setError({ status: true, msg: "All Fields are Required", type: "error" });
     }

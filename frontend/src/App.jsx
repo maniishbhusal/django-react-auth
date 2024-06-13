@@ -5,11 +5,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginReg from "./components/pages/auth/LoginReg";
 import SendPasswordResetEmail from "./components/pages/auth/SendPasswordResetEmail";
 import ResetPassword from "./components/pages/auth/ResetPassword";
+import Dashboard from "./components/pages/Dashboard";
+import NotFound from "./components/pages/NotFound";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <NotFound />,
     children: [
       {
         path: "/",
@@ -32,6 +35,10 @@ const router = createBrowserRouter([
         element: <ResetPassword />,
       },
     ],
+  },
+  {
+    path: "dashboard",
+    element: <Dashboard />,
   },
 ]);
 
