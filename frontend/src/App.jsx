@@ -1,12 +1,12 @@
-import Contact from "./components/pages/Contact";
-import Home from "./components/pages/Home";
-import Layout from "./components/pages/Layout";
+import Contact from "./pages/Contact";
+import Home from "./pages/Home";
+import Layout from "./pages/Layout";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LoginReg from "./components/pages/auth/LoginReg";
-import SendPasswordResetEmail from "./components/pages/auth/SendPasswordResetEmail";
-import ResetPassword from "./components/pages/auth/ResetPassword";
-import Dashboard from "./components/pages/Dashboard";
-import NotFound from "./components/pages/NotFound";
+import LoginReg from "./pages/auth/LoginReg";
+import SendPasswordResetEmail from "./pages/auth/SendPasswordResetEmail";
+import ResetPassword from "./pages/auth/ResetPassword";
+import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
   {
