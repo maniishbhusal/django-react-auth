@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Alert,
   Box,
@@ -6,19 +6,20 @@ import {
   Checkbox,
   FormControlLabel,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 
+import { useRegisterUserMutation } from "../../services/userAuthApi";
+
 const UserRegistrationPage = () => {
+  const [serverError, setServerError] = useState({});
   const navigate = useNavigate(); // for redirection
 
-  const [error, setError] = useState({
-    status: false,
-    msg: "",
-    type: "",
-  });
+  // rtk query for register user
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     console.log(data.get("tc"));
@@ -26,44 +27,35 @@ const UserRegistrationPage = () => {
       name: data.get("name"),
       email: data.get("email"),
       password: data.get("password"),
-      password_confirmation: data.get("password_confirmation"),
+      password2: data.get("password2"),
       tc: data.get("tc"),
     };
-
-    // console.log(actualData);
-    // validation
-    if (
-      actualData.name &&
-      actualData.email &&
-      actualData.password &&
-      actualData.password_confirmation &&
-      actualData.tc
-    ) {
-      if (actualData.password === actualData.password_confirmation) {
-        setError({
-          status: true,
-          msg: "Registration Successful",
-          type: "success",
-        });
-        document.getElementById("registration-form").reset();
-        navigate("/");
-      } else {
-        setError({
-          status: true,
-          msg: "Passwords do not match",
-          type: "error",
-        });
-      }
-    } else {
-      setError({
-        status: true,
-        msg: "All fields are required",
-        type: "error",
-      });
+    const res = await registerUser(actualData);
+    if (res.error) {
+      console.log(res.error.data);
+      setServerError(res.error.data);
+    }
+    if (res.data) {
+      console.log(res.data);
+      navigate("/dashboard");
     }
   };
   return (
     <>
+      {/* {serverError.name ? console.log("name error", serverError.name[0]) : ""}
+      {serverError.email
+        ? console.log("email error", serverError.email[0])
+        : ""}
+      {serverError.password
+        ? console.log("password error", serverError.password[0])
+        : ""}
+      {serverError.password
+        ? console.log("password2 error", serverError.password2[0])
+        : ""}
+      {serverError.tc ? console.log("tc error", serverError.tc[0]) : ""}
+      {serverError.non_field_errors
+        ? console.log("non error", serverError.non_field_errors[0])
+        : ""} */}
       <Box
         component="form"
         noValidate
@@ -71,6 +63,7 @@ const UserRegistrationPage = () => {
         id="registration-form"
         onSubmit={handleSubmit}
       >
+        {/* name field */}
         <TextField
           required
           fullWidth
@@ -79,7 +72,15 @@ const UserRegistrationPage = () => {
           name="name"
           label="Name"
         />
+        {serverError.name ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {serverError.name[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
 
+        {/* {email field} */}
         <TextField
           required
           fullWidth
@@ -88,6 +89,15 @@ const UserRegistrationPage = () => {
           name="email"
           label="Email Address"
         />
+        {serverError.email ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {serverError.email[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
+
+        {/* password field */}
         <TextField
           required
           fullWidth
@@ -97,21 +107,51 @@ const UserRegistrationPage = () => {
           label="Password"
           type="password"
         />
-
+        {serverError.password ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {serverError.password[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
+        {/* password2 field */}
         <TextField
           required
           fullWidth
           margin="normal"
-          id="password_confirmation"
-          name="password_confirmation"
+          id="password2"
+          name="password2"
           label="Confirm Password"
           type="password"
         />
+        {serverError.password2 ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {serverError.password2[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
+
+        {/* tc field */}
 
         <FormControlLabel
-          control={<Checkbox value="agree" color="primary" name="tc" id="tc" />}
+          control={<Checkbox value={true} color="primary" name="tc" id="tc" />}
           label="I agree to term and condition."
         />
+        {serverError.tc ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {serverError.tc[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
+
+        {/* error message */}
+        {serverError.non_field_errors ? (
+          <Alert severity="error">{serverError.non_field_errors[0]}</Alert>
+        ) : (
+          ""
+        )}
 
         <Box textAlign="center">
           <Button
@@ -122,7 +162,6 @@ const UserRegistrationPage = () => {
             Register
           </Button>
         </Box>
-        {error.status ? <Alert severity={error.type}>{error.msg}</Alert> : ""}
       </Box>
     </>
   );
