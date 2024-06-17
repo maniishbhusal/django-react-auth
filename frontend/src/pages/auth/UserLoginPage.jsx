@@ -2,6 +2,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import axiosInstance from "../../services/axiosInstance";
+// import storeToken from "../../services/localStorageService";
+import {
+  storeToken,
+  getToken,
+  removeToken,
+} from "../../services/localStorageService";
 
 const UserLoginPage = () => {
   const [serverError, setServerError] = useState({});
@@ -19,6 +25,9 @@ const UserLoginPage = () => {
       console.log("axios ", res);
       if (res.data) {
         console.log(res.data);
+        storeToken(
+          res.data.token // Store the token in local storage
+        );
         navigate("/dashboard"); // Navigate to the dashboard after successful login
       }
     } catch (error) {

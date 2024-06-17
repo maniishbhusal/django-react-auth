@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 
 import { useRegisterUserMutation } from "../../services/userAuthApi";
+import { storeToken } from "../../services/localStorageService";
 
 const UserRegistrationPage = () => {
   const [serverError, setServerError] = useState({});
@@ -37,6 +38,7 @@ const UserRegistrationPage = () => {
     }
     if (res.data) {
       console.log(res.data);
+      storeToken(res.data.token); // store token locally
       navigate("/login");
     }
   };
