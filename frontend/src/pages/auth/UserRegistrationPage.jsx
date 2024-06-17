@@ -37,7 +37,7 @@ const UserRegistrationPage = () => {
     }
     if (res.data) {
       console.log(res.data);
-      navigate("/dashboard");
+      navigate("/login");
     }
   };
   return (

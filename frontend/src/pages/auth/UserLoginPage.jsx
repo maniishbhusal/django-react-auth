@@ -1,31 +1,29 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Alert, Box, Button, TextField } from "@mui/material";
+import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import axiosInstance from "../../services/axiosInstance";
 
 const UserLoginPage = () => {
+  const [serverError, setServerError] = useState({});
   const navigate = useNavigate();
-  const [error, setError] = useState({
-    status: false,
-    msg: "",
-    type: "",
-  });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const actualData = {
       email: data.get("email"),
       password: data.get("password"),
     };
-
-    // console.log(actualData);
-    // validation
-    if (actualData.email && actualData.password) {
-      setError({ status: true, msg: "Login Successful", type: "success" });
-      document.getElementById("login-form").reset();
-      navigate("/dashboard");
-    } else {
-      setError({ status: true, msg: "All Fields are Required", type: "error" });
+    try {
+      const res = await axiosInstance.post("login/", actualData);
+      console.log("axios ", res);
+      if (res.data) {
+        console.log(res.data);
+        navigate("/dashboard"); // Navigate to the dashboard after successful login
+      }
+    } catch (error) {
+      console.log(error.response.data);
+      setServerError(error.response.data);
     }
   };
 
@@ -46,6 +44,15 @@ const UserLoginPage = () => {
           name="email"
           label="Email Address"
         />
+        {/* This will return undefined if serverError.errors is undefined or if serverError.errors.email is undefined. */}
+        {serverError.errors?.email ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {serverError.errors.email[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
+
         <TextField
           required
           fullWidth
@@ -55,6 +62,15 @@ const UserLoginPage = () => {
           label="Password"
           type="password"
         />
+
+        {serverError.errors?.password ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {serverError.errors.password[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
+
         <Box textAlign="center">
           <Button
             type="submit"
@@ -65,8 +81,14 @@ const UserLoginPage = () => {
           </Button>
         </Box>
         <NavLink to="/sendpasswordresetemail">Forgot Password?</NavLink>
-        {error.status ? <Alert severity={error.type}>{error.msg}</Alert> : ""}
       </Box>
+
+      {/* error message */}
+      {serverError.error ? (
+        <Alert severity="error">{serverError.error}</Alert>
+      ) : (
+        ""
+      )}
     </>
   );
 };
