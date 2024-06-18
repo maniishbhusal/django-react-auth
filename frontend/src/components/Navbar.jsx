@@ -1,7 +1,9 @@
 import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { getToken } from "../services/localStorageService";
 
 const Navbar = () => {
+  const { access_token } = getToken();
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="secondary">
@@ -12,7 +14,7 @@ const Navbar = () => {
           <Button
             component={NavLink}
             to="/"
-            sx={{ color: "white",textTransform:'none' }}
+            sx={{ color: "white", textTransform: "none" }}
             style={({ isActive }) => ({
               textDecoration: isActive ? "underline" : "",
               backgroundColor: isActive ? "rgba(255, 255, 255, 0.2)" : "",
@@ -24,7 +26,7 @@ const Navbar = () => {
           <Button
             component={NavLink}
             to="/contact"
-            sx={{ color: "white",textTransform:'none' }}
+            sx={{ color: "white", textTransform: "none" }}
             style={({ isActive }) => ({
               textDecoration: isActive ? "underline" : "",
               backgroundColor: isActive ? "rgba(255, 255, 255, 0.2)" : "",
@@ -33,17 +35,27 @@ const Navbar = () => {
             Contact
           </Button>
 
-          <Button
-            component={NavLink}
-            to="/login"
-            sx={{ color: "white",textTransform:'none' }}
-            style={({ isActive }) => ({
-              textDecoration: isActive ? "underline" : "",
-              backgroundColor: isActive ? "rgba(255, 255, 255, 0.2)" : "",
-            })}
-          >
-            Login/Reg
-          </Button>
+          {access_token ? (
+            <Button
+              component={NavLink}
+              to="/dashboard"
+              sx={{ color: "white", textTransform: "none" }}
+            >
+              Dashboard
+            </Button>
+          ) : (
+            <Button
+              component={NavLink}
+              to="/login"
+              sx={{ color: "white", textTransform: "none" }}
+              style={({ isActive }) => ({
+                textDecoration: isActive ? "underline" : "",
+                backgroundColor: isActive ? "rgba(255, 255, 255, 0.2)" : "",
+              })}
+            >
+              Login/Reg
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

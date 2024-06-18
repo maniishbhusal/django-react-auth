@@ -2,12 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import axiosInstance from "../../services/axiosInstance";
-// import storeToken from "../../services/localStorageService";
-import {
-  storeToken,
-  getToken,
-  removeToken,
-} from "../../services/localStorageService";
+import { storeToken } from "../../services/localStorageService";
 
 const UserLoginPage = () => {
   const [serverError, setServerError] = useState({});
