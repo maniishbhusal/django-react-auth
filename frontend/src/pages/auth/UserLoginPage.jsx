@@ -1,12 +1,16 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { Alert, Box, Button, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axiosInstance from "../../services/axiosInstance";
-import { storeToken } from "../../services/localStorageService";
+import { getToken, storeToken } from "../../services/localStorageService";
+import { useDispatch } from "react-redux";
+import { setUserToken } from "../../features/authSlice";
 
 const UserLoginPage = () => {
   const [serverError, setServerError] = useState({});
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +27,8 @@ const UserLoginPage = () => {
         storeToken(
           res.data.token // Store the token in local storage
         );
+        let { access_token } = getToken();
+        dispatch(setUserToken({ access_token: access_token }));
         navigate("/dashboard"); // Navigate to the dashboard after successful login
       }
     } catch (error) {
@@ -30,6 +36,11 @@ const UserLoginPage = () => {
       setServerError(error.response.data);
     }
   };
+
+  // let { access_token } = getToken();
+  // useEffect(() => {
+  //   dispatch(setUserToken({ access_token: access_token }));
+  // }, [access_token, dispatch]);
 
   return (
     <>
