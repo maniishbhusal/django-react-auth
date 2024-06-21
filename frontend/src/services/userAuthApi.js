@@ -21,17 +21,7 @@ export const userAuthApi = createApi({
   }),
 });
 
-
-/**
- * The function `changePassword` asynchronously sends a POST request to change a user's password with
- * proper authorization handling.
- * @param passwordData - The `passwordData` parameter in the `changePassword` function likely contains
- * the new password information that the user wants to change to. It could include fields such as
- * `oldPassword` and `newPassword` to verify the user's identity and update their password accordingly.
- * @returns The `changePassword` function is returning the data received from the API response if the
- * request is successful. If there is an error during the API call, it will return the error response
- * data.
- */
+//  The function `changePassword` asynchronously sends a POST request to change a user's password with  proper authorization handling.
 const changePassword = async (passwordData) => {
   try {
     const { access_token } = getToken();
@@ -40,7 +30,6 @@ const changePassword = async (passwordData) => {
         Authorization: `Bearer ${access_token}`,
       },
     });
-    // console.log(res.data);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -48,5 +37,34 @@ const changePassword = async (passwordData) => {
   }
 };
 
-export default changePassword;
+// sends a reset password email using an axios POST request and  handles any errors that may occur.
+const sendResetPasswordEmail = async (email) => {
+  try {
+    const res = await axiosInstance.post("send-reset-password-email/", email);
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return error.response.data;
+  }
+};
+
+// it sends a POST request to reset a user's password using the provided password data, user ID (uid), and token.
+const resetPassword = async (passwordData, uid, token) => {
+  try {
+    const res = await axiosInstance.post(
+      `password-reset-confirm/${uid}/${token}/`,
+      passwordData
+    );
+    console.log(res.data);
+    console.log("uidd", uid);
+    console.log("tokenn", token);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return error.response.data;
+  }
+};
+
+export { changePassword, sendResetPasswordEmail, resetPassword };
 export const { useRegisterUserMutation } = userAuthApi;

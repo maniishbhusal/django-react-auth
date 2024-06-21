@@ -38,7 +38,7 @@ const AppRouter = () => {
           element: <SendPasswordResetEmail />,
         },
         {
-          path: "reset/:uid/:token",
+          path: "api/user/reset/:uid/:token",
           element: <ResetPassword />,
         },
       ],

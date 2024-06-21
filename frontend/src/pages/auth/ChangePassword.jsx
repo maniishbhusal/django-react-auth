@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Grid, Box, TextField, Typography, Button, Alert } from "@mui/material";
-import changePassword from "../../services/userAuthApi";
+import {changePassword} from "../../services/userAuthApi";
 
 const ChangePassword = () => {
   // State to manage server errors
