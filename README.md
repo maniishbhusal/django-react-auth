@@ -1,10 +1,10 @@
 # Django-React Authentication Project
 
-This project is a comprehensive authentication system built with Django Rest Framework (DRF) for backend REST APIs and React for the frontend. It uses JWT for secure authentication and provides a seamless user experience for handling all aspects of user authentication.
+This project is a comprehensive authentication system built with Django Rest Framework (DRF) for backend REST APIs and React for the frontend. It uses JWT for secure authentication and provides a seamless user experience for handling all user authentication aspects.
 
 ## Features
 
-- **User Registration**: Create a new account.
+- **User Registration**: Create a new account with Email Verification.
 - **Login**: Authenticate and log in to your account.
 - **Password Reset**: Reset your password if you've forgotten it.
 - **Change Password**: Change your current password.
