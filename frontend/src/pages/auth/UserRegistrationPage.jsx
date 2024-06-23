@@ -39,7 +39,8 @@ const UserRegistrationPage = () => {
     if (res.data) {
       console.log(res.data);
       storeToken(res.data.token); // store token locally
-      navigate("/login");
+      setServerError(res.data);
+      // navigate("/login");
     }
   };
   return (
@@ -151,6 +152,12 @@ const UserRegistrationPage = () => {
         {/* error message */}
         {serverError.non_field_errors ? (
           <Alert severity="error">{serverError.non_field_errors[0]}</Alert>
+        ) : (
+          ""
+        )}
+
+        {serverError.msg ? (
+          <Alert severity="success">{serverError.msg}</Alert>
         ) : (
           ""
         )}
