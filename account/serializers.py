@@ -1,14 +1,13 @@
 from rest_framework import serializers
-
-from account.utils import Util
-from .models import User
-from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, smart_str
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-
+from django.utils.encoding import DjangoUnicodeDecodeError
+from .models import User
+from .utils import Util
+from .tokens import account_activation_token  
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    # We are writing this because we need to confirm password field in our Registration Request
     password2 = serializers.CharField(
         write_only=True, style={'input_type': 'password'})
 
@@ -17,7 +16,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = ['email', 'name', 'tc', 'password', 'password2']
         extra_kwargs = {'password': {'write_only': True}}
 
-    # Validating password and confirm password while Registration
     def validate(self, data):
         password = data.get('password')
         password2 = data.get('password2')
@@ -28,7 +26,32 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
+        # It is crucial to ensure that sensitive data like password2 is not inadvertently passed to the create_user method to maintain data security and prevent potential vulnerabilities.
+        if 'password2' in validated_data:
+            del validated_data['password2']
         user = User.objects.create_user(**validated_data)
+        user.is_active = False  # Deactivate account until it is confirmed
+        user.save()
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+        activation_link = f"http://localhost:8000/api/user/activate/{
+            uid}/{token}"
+
+        # Send activation email
+        email_body = f"Hi {user.name},\nUse the link below to activate your account:\n{
+            activation_link}"
+        data = {
+            'subject': 'Activate your account',
+            'body': email_body,
+            'to_email': user.email
+        }
+        # Handle potential email sending failures gracefully
+        try:
+            Util.send_email(data)
+        except Exception as e:
+            print(f"Failed to send activation email: {e}")
+        # print(activation_link)
 
         return user
 
