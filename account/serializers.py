@@ -124,8 +124,8 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
         }
 
         # Uncomment below code to send email for reseting password
-        # Util.send_email(data)
-        print("link "+link)
+        Util.send_email(data)
+        # print("link "+link)
         return data
 
 
